@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from './user/user';
 import { UserService } from './user/user.service';
+import { catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -14,12 +16,38 @@ export class AppComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe((res) => {
-      this.users = res;
-    });
+    this.userService
+      .getUsers()
+      .pipe(
+        tap(res => console.log('Tap', res)),
+        catchError((res) => {
+          console.log('catchError', res);
+          return of([
+            {
+              id: 0,
+              name: '-',
+              username: '-',
+              email: '-',
+            },
+          ]);
+        })
+      )
+      .subscribe(
+        (res) => {
+          this.users = res;
+        },
+        (err) => {
+          this.userService.handleError(err);
+        }
+      );
 
-    this.userService.getUser(1).subscribe((res) => {
-      this.user = res[0];
-    })
+    this.userService.getUser(1).subscribe(
+      (res) => {
+        this.user = res[0];
+      },
+      (err) => {
+        this.userService.handleError(err);
+      }
+    );
   }
 }

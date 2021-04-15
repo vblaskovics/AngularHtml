@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { User } from './user';
 
 @Injectable({
@@ -17,5 +17,16 @@ export class UserService {
 
   getUser(id) {
     return this.httpClient.get<User[]>(`${this.API}`, { params: { id: id } });
+  }
+
+  handleError(err: HttpErrorResponse) {
+      let errorMessage = '';
+      if (err.error instanceof ErrorEvent) {
+          errorMessage = err.error.message;
+      } else {
+          errorMessage = `Error Code: ${err.status}\nMessage: ${err.message}`;
+      }
+      console.log(errorMessage);
+      return throwError(errorMessage);
   }
 }
