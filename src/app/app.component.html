@@ -1,5 +1,14 @@
 <h1>Hello {{user && user.username}}!</h1>
-
+<div class="ui form container">
+  <div class="field">
+    <label for="id">Id</label>
+    <input type="text" name="id" [(ngModel)]="id" (change)="onQuery()">
+  </div>
+  <div class="field">
+    <label for="username">Username</label>
+    <input type="text" name="username" [(ngModel)]="username" (change)="onQuery()">
+  </div>
+</div>
 <table class="ui celled padded table">
   <thead>
     <tr>

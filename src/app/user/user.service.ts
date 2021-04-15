@@ -19,14 +19,20 @@ export class UserService {
     return this.httpClient.get<User[]>(`${this.API}`, { params: { id: id } });
   }
 
+  getUserQuery(query) {
+    return this.httpClient.get<User[]>(`${this.API}`, {
+      params: query,
+    });
+  }
+
   handleError(err: HttpErrorResponse) {
-      let errorMessage = '';
-      if (err.error instanceof ErrorEvent) {
-          errorMessage = err.error.message;
-      } else {
-          errorMessage = `Error Code: ${err.status}\nMessage: ${err.message}`;
-      }
-      console.log(errorMessage);
-      return throwError(errorMessage);
+    let errorMessage = '';
+    if (err.error instanceof ErrorEvent) {
+      errorMessage = err.error.message;
+    } else {
+      errorMessage = `Error Code: ${err.status}\nMessage: ${err.message}`;
+    }
+    console.log(errorMessage);
+    return throwError(errorMessage);
   }
 }

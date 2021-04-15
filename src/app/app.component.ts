@@ -12,6 +12,8 @@ import { of } from 'rxjs';
 export class AppComponent implements OnInit {
   users: Array<User>;
   user: User;
+  username: string;
+  id: string;
 
   constructor(private userService: UserService) {}
 
@@ -19,7 +21,7 @@ export class AppComponent implements OnInit {
     this.userService
       .getUsers()
       .pipe(
-        tap(res => console.log('Tap', res)),
+        tap((res) => console.log('Tap', res)),
         catchError((res) => {
           console.log('catchError', res);
           return of([
@@ -44,6 +46,25 @@ export class AppComponent implements OnInit {
     this.userService.getUser(1).subscribe(
       (res) => {
         this.user = res[0];
+      },
+      (err) => {
+        this.userService.handleError(err);
+      }
+    );
+  }
+
+  onQuery() {
+    let query:any = {};
+    if (this.id) {
+      query.id = this.id;
+    }
+    if (this.username) {
+      query.username = this.username;
+    }
+    this.userService.getUserQuery(query).subscribe(
+      (res) => {
+        console.log(res);
+        this.users = res;
       },
       (err) => {
         this.userService.handleError(err);
